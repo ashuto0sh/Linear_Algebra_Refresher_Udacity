@@ -65,18 +65,36 @@ class Vector(object):
         r=sum([x*y for x, y in zip(self.coordinates, other.coordinates)])
         return Decimal(r)
 
-    def AngleWith(self, other, in_degrees=False):
+    def AngleWith(self, other, in_degrees=False, epsilon=1e-10):
         d=self.Dot(other)
         sl, ol=self.Length(), other.Length()
 
         try:
-            angle=acos(d/(sl*ol))
+            k=d/(sl*ol)
+            if k-1>epsilon:
+                k=1
+            elif k+1<epsilon:
+                k=-1
+            angle=acos(k)
             if in_degrees==True:
                 angle=angle*180.0/pi
         except ZeroDivisionError:
             raise ZeroDivisionError('Unable to find angle with zero vector(s)')
 
         return angle
+
+    def IsZero(self, epsilon=1e-10):
+        return self.Length() < epsilon
+
+    def IsParallel(self, other, epsilon=1e-10):
+        if self.IsZero() or other.IsZero() or abs(self.AngleWith(other))<epsilon or abs(self.AngleWith(other)-pi)<epsilon:
+            return True
+        return False
+
+    def IsOrtho(self, other, epsilon=1e-10):
+        if self.IsZero() or other.IsZero() or abs(self.Dot(other))<epsilon:
+            return True
+        return False
 
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
