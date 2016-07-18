@@ -96,6 +96,21 @@ class Vector(object):
             return True
         return False
 
+    def ComponentParallel(self, basis):
+        try:
+            uv=basis.Norm()
+            weight=self.Dot(uv)
+            return uv*weight
+        except ZeroDivisionError:
+            raise Exception('Can\'t find component for zero vector basis')
+
+    def ComponentOrtho(self, basis):
+        try:
+            vp=self.ComponentParallel(basis)
+            return self-vp
+        except ZeroDivisionError :
+            raise ZeroDivisionError('Can\'t find component for zero vector basis')
+
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
 
