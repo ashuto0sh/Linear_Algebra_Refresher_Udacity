@@ -111,6 +111,21 @@ class Vector(object):
         except ZeroDivisionError :
             raise ZeroDivisionError('Can\'t find component for zero vector basis')
 
+    def CrossProduct(self, other):
+        if self.dimension!=3 or other.dimension!=3:
+            raise ValueError('Cross product only defined for 3D vectors')
+        a, b = self.coordinates, other.coordinates
+        x=a[1]*b[2]-a[2]*b[1]
+        y=-(a[0]*b[2]-a[2]*b[0])
+        z=a[0]*b[1]-a[1]*b[0]
+        return Vector([x, y, z])
+
+    def AreaOfParallelloGram(self, other):
+        try:
+            return self.CrossProduct(other).Length()
+        except ValueError:
+            raise ValueError('Area defined only for 3D vectors')
+
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
 
