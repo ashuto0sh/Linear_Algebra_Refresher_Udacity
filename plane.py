@@ -41,7 +41,15 @@ class Plane(object):
                 self.basepoint = None
             else:
                 raise e
+    
+    def IsParallel(self, other):
+        return self.normal_vector.IsParallel(other.normal_vector)
 
+    def __eq__(self, other):
+        if not self.IsParallel(other):
+            return False
+        v=(self.basepoint-other.basepoint)
+        return v.IsOrtho(self.normal_vector)
 
     def __str__(self):
 
