@@ -126,8 +126,28 @@ class Vector(object):
         except ValueError:
             raise ValueError('Area defined only for 3D vectors')
 
+    def __iter__(self):
+        return VectorIter(self)
+
+    def __getitem__(self, index):
+        return self.coordinates[index]
+
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
 
     def __eq__(self, v):
         return self.coordinates == v.coordinates
+
+class VectorIter(object):
+    def __init__(self, vec):
+        self.v=vec
+        self.i=-1
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.i!=self.v.dimension:
+            self.i+=1
+            return self.v[self.i]
+        raise StopIteration
