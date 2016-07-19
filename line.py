@@ -53,6 +53,18 @@ class Line(object):
         lp=b2-b1
         return self.normal_vector.IsOrtho(lp)
 
+    def IntersectionWith(self, other):
+        if self.IsParallel(other):
+            if self==other:
+                return self
+            return None
+        # below procedure is guaranteed success, don't bother try'ing for exceptions
+        A, B, k1 = self.normal_vector.coordinates[0], self.normal_vector.coordinates[1], self.constant_term
+        C, D, k2 = other.normal_vector.coordinates[0], other.normal_vector.coordinates[1], other.constant_term
+        x=(-B*k2+D*k1)/(A*D-B*C)
+        y=(A*k2-C*k1)/(A*D-B*C)
+        return (x,y)
+
     def __str__(self):
 
         num_decimal_places = 3
