@@ -1,6 +1,7 @@
 from decimal import Decimal, getcontext
 
 from vector import Vector
+from vector import VectorIter
 
 getcontext().prec = 30
 
@@ -15,7 +16,7 @@ class Line(object):
         if not normal_vector:
             all_zeros = ['0']*self.dimension
             normal_vector = Vector(all_zeros)
-        self.normal_vector = normal_vector
+        self.normal_vector = Vector(normal_vector)
 
         if not constant_term:
             constant_term = Decimal('0')
@@ -42,6 +43,15 @@ class Line(object):
             else:
                 raise e
 
+    def IsParallel(self, other):
+        return self.normal_vector.IsParallel(other.normal_vector)
+
+    def __eq__(self, other):
+        if not self.IsParallel(other):
+            return False
+        b1, b2=self.basepoint, other.basepoint
+        lp=b2-b1
+        return self.normal_vector.IsOrtho(lp)
 
     def __str__(self):
 
